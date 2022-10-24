@@ -1,44 +1,56 @@
-const consumirApi = async () => {
+function consumirApi(){
     const data = fetch("https://m2-api-token.herokuapp.com/recipe", {
         method: "GET",
         "Content-Type": "application/json"
     })
+    .then(res => res.json())
+    .then(resp2 => result = resp2  )
 
-    const result = data
+    let result = data
 
     return result 
 }
 
-const filtrarApiPorNome = async () => {
-    const dadosDaApi = await consumirApi
+consumirApi()
 
-    const dadosFiltrados = dadosDaApi.filter((element) => element = "Mioge")
 
+async function filtrarApiPorNome()  {
+
+    const dadosDaApi = await consumirApi()
+    const dadosFiltrados = dadosDaApi.filter(element => element.name === "Mioge")
+    
     return dadosFiltrados
 }
 
-const adicionarDadoAoLocalStorage = async () => {
+
+
+async function adicionarDadoAoLocalStorage () { 
     const dadosFiltrados = await filtrarApiPorNome()
 
-    localStorage.setItem("@kenzie:recipe", dados)
+    localStorage.setItem("@kenzie:recipe", JSON.stringify(dadosFiltrados))
 }
 
-const buscarDadosDoLocalStorage = () => {
-    const dadosBuscados = localStorage.getItem("@kenzie:recipe")
 
+function buscarDadosDoLocalStorag (){
+    const dadosBuscados = JSON.parse(localStorage.getItem("@kenzie:recipe"))
+    return dadosBuscados
 }
 
-const renderizarNaTela = () => {
-    const dadosDoLoalStorage = buscarDadosDoLocalStorage()
 
-    const containerPrincipal = doc.querySelector(".container")
 
-    dadosDoLoalStorage.forEach({name, description, ingredients } => {
+
+
+function renderizarNaTela () {
+    const dadosDoLoalStorage = buscarDadosDoLocalStorag()
+
+    const containerPrincipal = document.querySelector(".container")
+
+    dadosDoLoalStorage.forEach( element => {
         containerPrincipal.insertAdjacentHTML("beforeend", `
             <li class="card">
-                <h2>${name}</h2>
-                <p>${description}</p>
-                <p>${ingredients}</p>
+                <h2>${element.name}</h2>
+                <p>${element.description}</p>
+                <p>${element.ingredients}</p>
             </li>
         `)
     });
